@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../../component/header'
 import Cards from '../../component/cards'
-import card1 from '../../assets/card1.png'
-import axios from 'axios'
+import useApi from '../../helpers/useApi'
 
 function Movie() {
     const [genres, setGenres] = useState([])
     const [movies, setMovies] = useState([])
     const [filter, setFilter] = useState('')
 
+    const api = useApi()
+
     const getGenres = async () => {
         try {
-            const { data } = await axios.get('http://localhost:8000/genre')
+            const { data } = await api.get('/genre')
             setGenres(data.data)
         } catch (error) {
             console.log(error)
@@ -20,7 +21,7 @@ function Movie() {
 
     const getMovies = async () => {
         try {
-            const { data } = await axios.get(`http://localhost:8000/movie?limit=10&page=1&genre=${filter}`)
+            const { data } = await api.get(`/movie?limit=10&page=1&genre=${filter}`)
             setMovies(data.data)
         } catch (error) {
             console.log(error)

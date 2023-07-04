@@ -2,7 +2,13 @@ import React from 'react'
 import logo from '../assets/logo.png'
 import { Link } from 'react-router-dom'
 
+const user = {
+    name: 'Hedy Lamarr',
+    imageUrl: 'https://i.imgur.com/yXOvdOSs.jpg'
+}
+
 function Header() {
+    const isAuth = false
     return (
         <nav className="mx-auto flex max-w-7xl items-center justify-between p-5">
             <div className="md:flex md:gap-x-12 items-center justify-between">
@@ -18,11 +24,44 @@ function Header() {
                     </Link>
                 </div>
             </div>
-            <div className="hidden lg:flex lg:justify-end">
-                <Link to="/#" className="text-sm inline-block rounded-md border border-transparent bg-primary px-8 py-3 text-center text-white hover:bg-indigo-700">
-                    Sign Up
-                </Link>
-            </div>
+            {isAuth ? (
+                <div className="hidden lg:flex lg:justify-end">
+                    <div class="navbar bg-base-100">
+                        <div class="flex-none gap-2">
+                            <div class="form-control">
+                                <input type="text" placeholder="Search" class="input input-bordered input-sm w-full max-w-xs" />
+                            </div>
+                            <div class="dropdown dropdown-end">
+                                <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                                    <div class="w-14 rounded-full">
+                                        <img src={user.imageUrl} alt="profile" />
+                                    </div>
+                                </label>
+                                <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                                    <li>
+                                        <Link to="#" class="justify-between">
+                                            Profile
+                                            <span class="badge">New</span>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="#">Settings</Link>
+                                    </li>
+                                    <li>
+                                        <Link to="#">Logout</Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div className="hidden lg:flex lg:justify-end">
+                    <Link to="/signup" className="text-sm inline-block rounded-md border border-transparent bg-primary px-8 py-3 text-center text-white hover:bg-indigo-700">
+                        Sign Up
+                    </Link>
+                </div>
+            )}
             <div className="flex lg:hidden">
                 <button type="button" className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">

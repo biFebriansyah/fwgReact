@@ -6,6 +6,9 @@ module.exports = {
             colors: {
                 graysmoth: '#F5F6F8',
                 primary: '#5F2EEA'
+            },
+            backgroundImage: {
+                'hero-signup': "url('./assets/mask.png')"
             }
         }
     },
