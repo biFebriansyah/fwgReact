@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
 import ticketz from '../../assets/tickitz.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import useApi from '../../helpers/useApi'
+import { Show } from '../../helpers/toast'
 
 function Signup() {
     const [form, setForm] = useState({})
+
+    const navigate = useNavigate()
+    const api = useApi()
 
     const inputChange = (e) => {
         const data = { ...form }
@@ -12,7 +17,25 @@ function Signup() {
     }
 
     const register = () => {
-        console.log(form)
+        api({
+            method: 'POST',
+            url: '/users',
+            data: form
+        })
+            .then(({ data }) => {
+                Show('Registrasi Berhasil', 'success')
+                setTimeout(() => {
+                    navigate('/signin')
+                }, 3050)
+            })
+            .catch((err) => {
+                const axiosErr = err.response.data
+                if (axiosErr.message !== undefined) {
+                    Show(axiosErr.message, 'warning')
+                } else if (axiosErr.error !== undefined) {
+                    Show(axiosErr.error, 'error')
+                }
+            })
     }
 
     return (

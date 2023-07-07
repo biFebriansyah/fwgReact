@@ -1,14 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import ticketz from '../../assets/tickitz.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import useApi from '../../helpers/useApi'
+import { Show } from '../../helpers/toast'
+import { login } from '../../store/reducer/user'
+import { useDispatch, useSelector } from 'react-redux'
 
 function Signin() {
     const [form, setForm] = useState({})
+
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const api = useApi()
+
+    const { isAuth } = useSelector((s) => s.users)
+    useEffect(() => {
+        if (isAuth) {
+            navigate('/')
+        }
+    }, [isAuth])
 
     const inputChange = (e) => {
         const data = { ...form }
         data[e.target.name] = e.target.value
         setForm(data)
+    }
+
+    const goLogin = () => {
+        api({
+            method: 'POST',
+            url: '/auth',
+            data: form
+        })
+            .then(({ data }) => {
+                const token = data.token
+                dispatch(login(token))
+            })
+            .catch((err) => {
+                const axiosErr = err.response.data
+                if (axiosErr.message !== undefined) {
+                    Show(axiosErr.message, 'warning')
+                } else if (axiosErr.error !== undefined) {
+                    Show(axiosErr.error, 'error')
+                }
+            })
     }
 
     return (
@@ -27,16 +62,18 @@ function Signin() {
                         </p>
                         <div class="form-control w-full max-w-lg mt-10">
                             <label class="label">
-                                <span class="label-text">Email</span>
+                                <span class="label-text">Username</span>
                             </label>
-                            <input type="email" placeholder="Write your email" class="input input-bordered w-full max-w-lg" />
+                            <input type="text" name="username" placeholder="Write your username" class="input input-bordered w-full max-w-lg" onChange={inputChange} />
                             <label class="label">
                                 <span class="label-text">Password</span>
                             </label>
-                            <input type="password" placeholder="Write your password" class="input input-bordered w-full max-w-lg" />
+                            <input type="password" name="password" placeholder="Write your password" class="input input-bordered w-full max-w-lg" onChange={inputChange} />
                         </div>
                         <div className="bottom mt-10 text-center">
-                            <button class="btn btn-block btn-primary">Sign In</button>
+                            <button class="btn btn-block btn-primary" onClick={goLogin}>
+                                Sign In
+                            </button>
                             <div className="mt-4">
                                 Forgot your password ?{' '}
                                 <Link to="/" className="text-primary underline">

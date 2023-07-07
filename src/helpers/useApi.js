@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 function useApi(urls = '') {
-    const token = ''
+    const { token } = useSelector((s) => s.users)
 
     const [requests, setRequests] = useState({
         baseURL: process.env.REACT_APP_BASEURL || urls,

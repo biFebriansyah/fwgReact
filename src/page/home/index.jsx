@@ -1,11 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Header from '../../component/header'
 import Hero from '../../assets/hero.png'
 import card1 from '../../assets/card1.png'
 import card2 from '../../assets/card2.png'
 import card3 from '../../assets/card3.png'
+import { useSelector } from 'react-redux'
+import useApi from '../../helpers/useApi'
 
 function Home() {
+    const api = useApi()
+    const { isAuth } = useSelector((s) => s.users)
+
+    const fetchUser = async () => {
+        try {
+            const { data } = await api.get('/users')
+            console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        if (isAuth) {
+            fetchUser()
+        }
+    }, [isAuth])
+
     return (
         <>
             <header className="bg-white">
